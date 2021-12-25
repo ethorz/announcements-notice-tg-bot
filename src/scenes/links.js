@@ -1,18 +1,16 @@
-const { Scenes: { BaseScene } } = require('telegraf');
+import { Scenes } from 'telegraf';
 
-const main_keyboard = require('../keyboards/main');
-const links_keyboard = require('../keyboards/links');
-const back_keyboard = require('../keyboards/back');
+import { GENERAL_SCENES } from '../config/scenes.js';
+import { mainKeyboard, linksKeyboard, backKeyboard } from '../config/keyboards.js';
 
 let replyMessage, keyboard;
 
-const linksScene = new BaseScene('linksScene');
+const linksScene = new Scenes.BaseScene(GENERAL_SCENES.LINKS);
 
 linksScene.enter(async ctx => {
-	await ctx.deleteMessage();
 	const LINKS = ctx.session.links;
 	replyMessage = '◀️ <b>Возвращаемся...</b>';
-	keyboard = main_keyboard(ctx);
+	keyboard = mainKeyboard(ctx);
 	
 	if (LINKS?.length) {
 		let message = '🗒 <b>Список Ваших ссылок:</b>\n\n';
@@ -22,7 +20,7 @@ linksScene.enter(async ctx => {
 		
 		await ctx.replyWithHTML(message, { 
 			reply_markup: {
-				keyboard: links_keyboard,
+				keyboard: linksKeyboard,
 				resize_keyboard: true
 			},
 			disable_web_page_preview: true 
@@ -39,12 +37,12 @@ linksScene.on('message', ctx => {
 	
 	if (message === '🗑 Удалить ссылку') {
 		replyMessage = '⏩ <b>Идем дальше...</b>';
-		keyboard = back_keyboard;
+		keyboard = backKeyboard;
 
-		ctx.scene.enter('removeScene');
+		ctx.scene.enter(GENERAL_SCENES.REMOVE);
 	}
 })
 
 linksScene.leave(ctx => ctx.replyWithHTML(replyMessage, keyboard));
 
-module.exports = linksScene;
+export default linksScene;

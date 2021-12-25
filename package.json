@@ -2,10 +2,11 @@
   "name": "bot",
   "version": "1.0.1",
   "description": "",
-  "main": "bot.js",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon src/bot.js",
-    "build": "node src/bot.js"
+    "start": "nodemon src/index.js",
+    "build": "node src/index.js"
   },
   "author": "ethorz",
   "license": "MIT",

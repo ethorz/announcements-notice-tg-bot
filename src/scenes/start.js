@@ -1,12 +1,14 @@
-const { Scenes: { BaseScene } } = require('telegraf');
+import { Scenes } from 'telegraf';
 
-const main_keyboard = require('../keyboards/main');
+import { mainKeyboard } from '../config/keyboards.js';
+import { GENERAL_SCENES } from '../config/scenes.js';
+
 const message = `
 🔸 <b>Бот готов к использованию.</b>
 🔸 Если не появились вспомогательные кнопки
  ▶ Введите /start`;
 
-const startScene = new BaseScene('startScene');
+const startScene = new Scenes.BaseScene(GENERAL_SCENES.START);
 
 startScene.enter(async ctx => {
 	const userId = String(ctx.from.id);
@@ -31,11 +33,11 @@ startScene.enter(async ctx => {
 		}
 	} */
 
-	await ctx.replyWithHTML(message, main_keyboard(ctx));
+	await ctx.replyWithHTML(message, mainKeyboard(ctx));
 
 	console.log(`start scene was started successful`);
 
 	return ctx.scene.leave();
 });
 
-module.exports = startScene;
+export default startScene;

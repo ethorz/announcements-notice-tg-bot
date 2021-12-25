@@ -1,17 +1,15 @@
-const { Telegraf, Scenes: { WizardScene } } = require('telegraf');
+import { Telegraf, Scenes } from 'telegraf';
 
-const back_keyboard = require('../keyboards/back');
-const main_keyboard = require('../keyboards/main');
+import { GENERAL_SCENES } from '../config/scenes.js';
+import { backKeyboard, mainKeyboard } from '../config/keyboards.js';
 
 let endMessage;
-
 
 const linkHandler = Telegraf.on('message', async ctx => {
 	const message = ctx.message.text;
 	const urlParam = 's=104'
 	const urlExp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 	let link;
-	
 
 	if (message.match(urlExp)) {
 		if (!message.includes(urlParam)) {
@@ -62,13 +60,13 @@ const linkNameHandler = Telegraf.on('message', async ctx => {
 	return ctx.scene.leave();
 })
 
+const addScene = new Scenes.WizardScene(GENERAL_SCENES.ADD, linkHandler, linkNameHandler);
 
-const addScene = new WizardScene('addScene', linkHandler, linkNameHandler);
 addScene.enter(ctx => {
 	endMessage = '🔸 <b>Добавление отменено.</b>';
-	return ctx.replyWithHTML('🔗 <b>Введите ссылку:</b>', back_keyboard)
+	return ctx.replyWithHTML('🔗 <b>Введите ссылку:</b>', backKeyboard)
 });
-addScene.leave(ctx => ctx.replyWithHTML(endMessage, main_keyboard(ctx)));
 
+addScene.leave(ctx => ctx.replyWithHTML(endMessage, mainKeyboard(ctx)));
 
-module.exports = addScene;
+export default addScene;

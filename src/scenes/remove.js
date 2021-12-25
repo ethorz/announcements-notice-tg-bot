@@ -1,14 +1,13 @@
-const { Scenes: { BaseScene } } = require('telegraf');
+import { Scenes } from 'telegraf';
 
-const main_keyboard = require('../keyboards/main');
-const remove_keyboard = require('../keyboards/remove');
+import { GENERAL_SCENES } from '../config/scenes.js';
+import { mainKeyboard, removeKeyboard } from '../config/keyboards.js';
 
-
-const removeScene = new BaseScene('removeScene');
+const removeScene = new Scenes.BaseScene(GENERAL_SCENES.REMOVE);
 
 removeScene.enter(async ctx => {
 	await ctx.deleteMessage();
-	ctx.reply('📲 Нажмите на категорию, которую хотите удалить 📲', remove_keyboard(ctx.session.links));
+	ctx.reply('📲 Нажмите на категорию, которую хотите удалить 📲', removeKeyboard(ctx.session.links));
 });
 
 removeScene.on('callback_query', async ctx => {
@@ -24,16 +23,12 @@ removeScene.on('callback_query', async ctx => {
 		await ctx.editMessageText('🔗 Ссылок больше не осталось 🔗');
 		return ctx.scene.leave();
 	}
-	return ctx.editMessageText('📲 Нажмите на категорию, которую хотите удалить 📲', remove_keyboard(ctx.session.links));
+	return ctx.editMessageText('📲 Нажмите на категорию, которую хотите удалить 📲', removeKeyboard(ctx.session.links));
 	
-})
-
-
-
-
+});
 
 const message = '◀️ <b>Возвращаемся...</b>'
 
-removeScene.leave(ctx => ctx.replyWithHTML(message, main_keyboard(ctx)));
+removeScene.leave(ctx => ctx.replyWithHTML(message, mainKeyboard(ctx)));
 
-module.exports = removeScene;
+export default removeScene;

@@ -1,34 +1,23 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
+export const getLastItemFromAvitoPage = async (requestUrl) => {
+	const htmlPage = await axios.get(requestUrl);
 
-const getLastItemFromAvitoPage = async (url) => {
-	const htmlPage = await axios.get(url);
-	
 	const $ = cheerio.load(htmlPage.data);
-	const infoItem = $('.js-initial');
-	
-	const infoString = infoItem.attr('data-state');
-	let parsedData = null;
+	const container = $('[data-marker=catalog-serp]').first();
+	const element = $('[data-marker=item]', container).first();
+	const id = element.attr('id');
+	const url = $('a[itemprop=url]', element);
+	const description = $('meta[itemprop=description]', element).attr('content');
+	const price = $('meta[itemprop=price]', element).attr('content');
+	const priceCurrency = $('meta[itemprop=priceCurrency]', element).attr('content');
 
-	if (infoString) {
-		parsedData = JSON.parse(infoString);
-	}
-	
-	if (parsedData) {
-		const desiredElement = parsedData.catalog.items[1];
-
-		return {
-			id: desiredElement.id,
-			url: 'https://www.avito.ru' + desiredElement.urlPath,
-			title: desiredElement.title,
-			price: desiredElement.priceDetailed.fullString,
-			imageUrl: desiredElement.images[0]['432x324']
-		};
-	}
-	return false;
-	
+	return {
+		id,
+		url: 'https://www.avito.ru' + url.attr('href'),
+		title: url.attr('title'),
+		description,
+		price: `${price} ${priceCurrency}`
+	};
 }
-
-
-module.exports = getLastItemFromAvitoPage;
