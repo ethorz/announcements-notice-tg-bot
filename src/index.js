@@ -32,7 +32,7 @@ stage.hears('⏪ Назад', async (ctx) => {
 
 stage.hears('⏹ Остановить', async (ctx) => {
 	await ctx.deleteMessage();
-	
+
 	return ctx.scene.leave();
 });
 
@@ -62,3 +62,7 @@ bot.on('message', (ctx) => {
 });
 
 bot.launch();
+
+bot.catch((error) => {
+	console.error('Error in bot: ', error);
+});

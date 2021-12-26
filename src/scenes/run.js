@@ -19,14 +19,6 @@ runScene.enter(async (ctx) => {
 		links.forEach(async (link) => {
 			await getAnnouncementsFromAvito(ctx, link);
 		});
-
-		const stamp = new Date();
-
-		console.log(
-			`- Request from ${
-				ctx.chat.first_name
-			} | ${stamp.getHours()} : ${stamp.getMinutes()}`,
-		);
 	}, 10000);
 
 	ctx.replyWithHTML('🚀 <b>Детектор запущен!</b> 🚀', stopKeyboard);

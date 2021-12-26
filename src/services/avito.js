@@ -1,7 +1,8 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import { format } from 'date-fns';
 
-const cache = [];
+const cache = {};
 
 const getParsedDataFromPage = (html) => {
 	const $ = cheerio.load(html);
@@ -22,31 +23,26 @@ const getParsedDataFromPage = (html) => {
 
 export const getAnnouncementsFromAvito = async (ctx, { url, name }) => {
 	try {
-		const { data } = await axios.get(encodeURIComponent(url));
+		const { data } = await axios.get(encodeURI(url));
 
 		if (data) {
 			const { id, message } = getParsedDataFromPage(data);
 
-			const isExistInCache = cache.find((prev) => prev.name === name);
-
-			if (!isExistInCache) {
-				cache.push({
-					name,
-					id,
-				});
+			if (!cache[name]) {
+				cache[name] = id;
 
 				return;
 			}
 
-			if (cache.id !== id) {
+			if (cache[name] !== id) {
 				await ctx.replyWithHTML(`🔎 <b>${name}</b>\n${message}`);
 				
-				cache.id = id;
+				cache[name] = id;
 			}
 		}
 	} catch (error) {
 		console.warn(
-			`Get announcement from avito failed (${name}: ${url})`,
+			`[${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}] Get announcement from avito failed (${name}: ${url})`,
 		);
 		console.error(error);
 	}

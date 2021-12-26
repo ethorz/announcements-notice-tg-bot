@@ -21,7 +21,7 @@ export const linksKeyboard = [['⏪ Назад', '🗑 Удалить ссылк
 export const mainKeyboard = (ctx) => {
 	let keyboard = ['➕ Добавить ссылку'];
 
-	if (ctx.session.links.length) {
+	if (ctx.session.links?.length) {
 		keyboard = ['🚀 Запустить', '➕ Добавить ссылку', '📔 Мои ссылки'];
 	}
 

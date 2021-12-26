@@ -13,8 +13,9 @@ const message = `
 const startScene = new Scenes.BaseScene(GENERAL_SCENES.START);
 
 startScene.enter(async (ctx) => {
+	await ctx.deleteMessage();
+
 	const userId = String(ctx.from.id);
-	const userName = ctx.from.username;
 
 	ctx.session.links = [];
 
@@ -28,8 +29,6 @@ startScene.enter(async (ctx) => {
 	}
 
 	await ctx.replyWithHTML(message, mainKeyboard(ctx));
-
-	console.log(`start-scene was started successfully by ${userName}`);
 
 	return ctx.scene.leave();
 });

@@ -12,6 +12,8 @@ let replyMessage, keyboard;
 const linksScene = new Scenes.BaseScene(GENERAL_SCENES.LINKS);
 
 linksScene.enter(async (ctx) => {
+	await ctx.deleteMessage();
+	
 	const LINKS = ctx.session.links;
 	replyMessage = '◀️ <b>Возвращаемся...</b>';
 	keyboard = mainKeyboard(ctx);

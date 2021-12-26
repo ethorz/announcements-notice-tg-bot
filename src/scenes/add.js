@@ -76,7 +76,9 @@ const addScene = new Scenes.WizardScene(
 	linkNameHandler,
 );
 
-addScene.enter((ctx) => {
+addScene.enter(async (ctx) => {
+	await ctx.deleteMessage();
+
 	endMessage = '🔸 <b>Добавление отменено.</b>';
 	return ctx.replyWithHTML('🔗 <b>Введите ссылку:</b>', backKeyboard);
 });
