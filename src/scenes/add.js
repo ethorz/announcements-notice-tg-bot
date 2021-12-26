@@ -1,5 +1,7 @@
 import { Telegraf, Scenes } from 'telegraf';
 
+import * as db from '../database/links.js';
+
 import { GENERAL_SCENES } from '../config/scenes.js';
 import { backKeyboard, mainKeyboard } from '../config/keyboards.js';
 
@@ -44,13 +46,16 @@ const linkNameHandler = Telegraf.on('message', async ctx => {
 
 	if (message !== '⏪ Назад') {
 		ctx.session.linkName = message;
-		
-		ctx.session.links.push({
+
+		const link = {
 			link: ctx.session.link,
 			link_name: ctx.session.linkName
-		});
+		}
 		
-		// await db.ref(`users/${userId}/links`).set(ctx.session.links);
+		ctx.session.links.push(link);
+
+		await db.setAddedLinkIntoTable(userId, link);
+
 		ctx.session.link = '';
 		ctx.session.linkName = '';
 		await ctx.deleteMessage();

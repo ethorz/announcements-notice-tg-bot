@@ -10,9 +10,10 @@ export const backKeyboard = Markup.keyboard([
 
 export const removeKeyboard = (links) => {
 	let keyboard = [];
+	
 	links.forEach((link, key) => {
 		keyboard.push([Markup.button.callback(`🔗 ${link.link_name}`, `remove_${key}`)]);
-	})
+	});
 
 	return Markup.inlineKeyboard(keyboard);
 };

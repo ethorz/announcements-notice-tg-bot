@@ -1,6 +1,7 @@
 import { Telegraf, Scenes, session } from 'telegraf';
 import dotenv from 'dotenv';
 
+import './database/connect.js';
 import startScene from './scenes/start.js';
 import addScene from './scenes/add.js';
 import linksScene from './scenes/links.js';

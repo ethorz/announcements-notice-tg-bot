@@ -1,5 +1,7 @@
 import { Scenes } from 'telegraf';
 
+import * as db from '../database/links.js';
+
 import { GENERAL_SCENES } from '../config/scenes.js';
 import { mainKeyboard, removeKeyboard } from '../config/keyboards.js';
 
@@ -12,17 +14,18 @@ removeScene.enter(async ctx => {
 
 removeScene.on('callback_query', async ctx => {
 	const link = ctx.callbackQuery.data;
-	const linkIndex = Number( link.split('_')[1] );
+	const linkIndex = Number(link.split('_')[1]);
 	const userId = String(ctx.from.id);
+	const [deletedLink] = ctx.session.links.splice(linkIndex, 1);
 
-	ctx.session.links.splice( linkIndex, 1);
-	// await db.ref(`users/${userId}/links`).set(ctx.session.links);
-	
+	await db.deleteLinkFromTable(deletedLink, userId);
 	await ctx.answerCbQuery('✅ Ссылка успешно удалена!');
+
 	if (!ctx.session.links.length) {
 		await ctx.editMessageText('🔗 Ссылок больше не осталось 🔗');
 		return ctx.scene.leave();
 	}
+	
 	return ctx.editMessageText('📲 Нажмите на категорию, которую хотите удалить 📲', removeKeyboard(ctx.session.links));
 	
 });

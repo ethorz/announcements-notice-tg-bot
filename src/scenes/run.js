@@ -1,5 +1,5 @@
 import { Scenes } from 'telegraf';
-import { getLastItemFromAvitoPage } from '../common/api.js';
+import { getAnnouncementsFromAvito } from '../services/avito.js';
 
 import { GENERAL_SCENES } from '../config/scenes.js';
 import { mainKeyboard, stopKeyboard } from '../config/keyboards.js';
@@ -7,46 +7,23 @@ import { mainKeyboard, stopKeyboard } from '../config/keyboards.js';
 const runScene = new Scenes.BaseScene(GENERAL_SCENES.RUN);
 
 runScene.enter(async ctx => {
-	const LINKS = ctx.session.links;
-	let dataFromPrevRequests = [];
+	const links = ctx.session.links;
 
-	if (LINKS.length) {
-		ctx.deleteMessage();
-		ctx.session.TIMER = setInterval(async () => {
-			LINKS.forEach( async link => {
-				const lastItemData = await getLastItemFromAvitoPage(link.link);
-				
-				if (lastItemData) {
-					const prevItemData = dataFromPrevRequests.find(prevData => {
-						return prevData.key === link.link_name;
-					})
-					
-					 if (!prevItemData) {
-						dataFromPrevRequests.push({
-							key: link.link_name,
-							currentId: lastItemData.id
-						})
-					} else {
-						if (prevItemData.currentId !== lastItemData.id) {
-							const message = `
-							🔎 <b>${link.link_name}</b>\n<a href="${lastItemData.url}">${lastItemData.title}</a>\n<b>${lastItemData.price}</b>`
-
-							await ctx.replyWithHTML(message);
-
-							prevItemData.currentId = lastItemData.id;
-						}
-					}
-				}
-			});
-			
-			const stamp = new Date();
-			console.log(`- Request from ${ctx.chat.first_name} | ${stamp.getHours()} : ${stamp.getMinutes()}`);
-			
-		}, 15000);
-
-		ctx.replyWithHTML('🚀 <b>Детектор запущен!</b> 🚀', stopKeyboard);
+	if (!links.length) {
+		return false;
 	}
 	
+	ctx.deleteMessage();
+	ctx.session.TIMER = setInterval(async () => {
+		links.forEach( async (link) => {
+			await getAnnouncementsFromAvito(ctx, link);
+		});
+			
+		const stamp = new Date();
+		console.log(`- Request from ${ctx.chat.first_name} | ${stamp.getHours()} : ${stamp.getMinutes()}`);
+	}, 10000);
+
+	ctx.replyWithHTML('🚀 <b>Детектор запущен!</b> 🚀', stopKeyboard);
 });
 
 runScene.leave(ctx => {

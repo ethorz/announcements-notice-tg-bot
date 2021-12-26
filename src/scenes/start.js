@@ -1,5 +1,7 @@
 import { Scenes } from 'telegraf';
 
+import * as db from '../database/links.js';
+
 import { mainKeyboard } from '../config/keyboards.js';
 import { GENERAL_SCENES } from '../config/scenes.js';
 
@@ -16,26 +18,18 @@ startScene.enter(async ctx => {
 
 	ctx.session.links = [];
 
-	// TODO: прикрутить sqlite или mondodb
-	/* const usersRes = await db.ref('users').once('value');
-	const usersValue = await usersRes.val();
+	try {
+		const links = await db.getLinksByUserId(userId);
 
-	if ( !Object.keys(usersValue).includes(userId) ) {
-		const user = { name: userName, id: userId }
-		await db.ref(`users/${userId}`).set(user);
-	} else {
-		const userLinksRes = await db.ref(`users/${userId}/links`).once('value');
-		const userLinks = await userLinksRes.val();
-		if (userLinks) {
-			ctx.session.links = userLinks;
-		} else {
-			ctx.session.links = [];
-		}
-	} */
+		ctx.session.links = links;
+	} catch (error) {
+		console.warn(`can\'t get link from database by user_id: ${userId}`);
+		console.error(error);
+	}
 
 	await ctx.replyWithHTML(message, mainKeyboard(ctx));
 
-	console.log(`start scene was started successful`);
+	console.log(`start-scene was started successfully by ${userName}`);
 
 	return ctx.scene.leave();
 });
