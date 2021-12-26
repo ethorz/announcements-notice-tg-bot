@@ -2,8 +2,6 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { format } from 'date-fns';
 
-const cache = {};
-
 const getParsedDataFromPage = (html) => {
 	const $ = cheerio.load(html);
 	const container = $('[data-marker=catalog-serp]').first();
@@ -22,28 +20,35 @@ const getParsedDataFromPage = (html) => {
 };
 
 export const getAnnouncementsFromAvito = async (ctx, { url, name }) => {
+	// create cache on start bot for all platforms (for avito, cian and etc).
+	// write util for prepare and methods for work with cache
+	if (typeof ctx.session.cache !== 'object') {
+		ctx.session.cache = {};
+	}
+
 	try {
 		const { data } = await axios.get(encodeURI(url));
 
 		if (data) {
 			const { id, message } = getParsedDataFromPage(data);
 
-			if (!cache[name]) {
-				cache[name] = id;
+			if (!ctx.session.cache[name]) {
+				ctx.session.cache[name] = id;
 
 				return;
 			}
 
-			if (cache[name] !== id) {
+			if (ctx.session.cache[name] !== id) {
 				await ctx.replyWithHTML(`🔎 <b>${name}</b>\n${message}`);
 				
-				cache[name] = id;
+				ctx.session.cache[name] = id;
 			}
 		}
 	} catch (error) {
 		console.warn(
 			`[${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}] Get announcement from avito failed (${name}: ${url})`,
 		);
+
 		console.error(error);
 	}
 };
