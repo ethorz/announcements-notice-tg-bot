@@ -1,0 +1,40 @@
+{
+	"env": {
+		"browser": false,
+		"es6": true,
+		"commonjs": true,
+		"node": true
+	},
+	"extends": ["prettier"],
+	"plugins": ["prettier"],
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaVersion": "latest"
+	},
+	"rules": {
+		"no-unused-vars": "error",
+		"no-extra-semi": "error",
+		"no-empty": "error",
+		"no-sparse-arrays": "error",
+		"no-unreachable": "error",
+		"no-unexpected-multiline": "error",
+		"no-const-assign": "error",
+		"no-duplicate-imports": "error",
+		"curly": "error",
+		"require-await": "error",
+		"semi": ["error", "always"],
+		"quotes": ["error", "single"],
+		"eol-last": ["error", "always"],
+		"camelcase": [
+			"error",
+			{
+				"properties": "never"
+			}
+		],
+		"no-spaced-func": "error",
+		"prefer-const": "warn",
+		"eqeqeq": "warn",
+		"space-before-blocks": ["warn", "always"],
+		"rest-spread-spacing": ["warn", "never"]
+	}
+}

@@ -12,7 +12,7 @@ const message = `
 
 const startScene = new Scenes.BaseScene(GENERAL_SCENES.START);
 
-startScene.enter(async ctx => {
+startScene.enter(async (ctx) => {
 	const userId = String(ctx.from.id);
 	const userName = ctx.from.username;
 

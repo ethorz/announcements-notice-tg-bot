@@ -1,26 +1,22 @@
 import { Markup } from 'telegraf';
 
-export const stopKeyboard = Markup.keyboard([
-	['⏹ Остановить']
-]).resize();
+export const stopKeyboard = Markup.keyboard([['⏹ Остановить']]).resize();
 
-export const backKeyboard = Markup.keyboard([
-	['⏪ Назад']
-]).resize();
+export const backKeyboard = Markup.keyboard([['⏪ Назад']]).resize();
 
 export const removeKeyboard = (links) => {
-	let keyboard = [];
-	
+	const keyboard = [];
+
 	links.forEach((link, key) => {
-		keyboard.push([Markup.button.callback(`🔗 ${link.link_name}`, `remove_${key}`)]);
+		keyboard.push([
+			Markup.button.callback(`🔗 ${link.name}`, `remove_${key}`),
+		]);
 	});
 
 	return Markup.inlineKeyboard(keyboard);
 };
 
-export const linksKeyboard = [
-	['⏪ Назад', '🗑 Удалить ссылку']
-];
+export const linksKeyboard = [['⏪ Назад', '🗑 Удалить ссылку']];
 
 export const mainKeyboard = (ctx) => {
 	let keyboard = ['➕ Добавить ссылку'];
@@ -30,4 +26,4 @@ export const mainKeyboard = (ctx) => {
 	}
 
 	return Markup.keyboard([keyboard]).resize();
-}
+};

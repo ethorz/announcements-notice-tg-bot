@@ -16,25 +16,34 @@ if (dotenvConfig.error) {
 	throw new Error('Dontenv config isn\'t exist');
 }
 
-const stage = new Scenes.Stage([ startScene, addScene, linksScene, removeScene, runScene ]);
+const stage = new Scenes.Stage([
+	startScene,
+	addScene,
+	linksScene,
+	removeScene,
+	runScene,
+]);
 
-stage.hears('⏪ Назад', async ctx => {
+stage.hears('⏪ Назад', async (ctx) => {
 	await ctx.deleteMessage();
+
 	return ctx.scene.leave();
 });
-stage.hears('⏹ Остановить', async ctx => {
+
+stage.hears('⏹ Остановить', async (ctx) => {
 	await ctx.deleteMessage();
+	
 	return ctx.scene.leave();
 });
 
 const bot = new Telegraf(process.env.TG_TOKEN);
 
-bot.use(session())
+bot.use(session());
 bot.use(stage.middleware());
 
-bot.command('/start', ctx => ctx.scene.enter(GENERAL_SCENES.START));
+bot.command('/start', (ctx) => ctx.scene.enter(GENERAL_SCENES.START));
 
-bot.on('message', ctx => {
+bot.on('message', (ctx) => {
 	const message = ctx.message.text;
 
 	switch (message) {
