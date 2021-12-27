@@ -9,6 +9,7 @@ const removeScene = new Scenes.BaseScene(GENERAL_SCENES.REMOVE);
 
 removeScene.enter(async (ctx) => {
 	await ctx.deleteMessage();
+	
 	ctx.reply(
 		'📲 Нажмите на категорию, которую хотите удалить 📲',
 		removeKeyboard(ctx.session.links),

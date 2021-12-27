@@ -5,6 +5,8 @@ import * as db from '../database/links.js';
 import { mainKeyboard } from '../config/keyboards.js';
 import { GENERAL_SCENES } from '../config/scenes.js';
 
+import { getNowFormattedString } from '../helpers/date.js';
+
 const message = `
 🔸 <b>Бот готов к использованию.</b>
 🔸 Если не появились вспомогательные кнопки
@@ -24,7 +26,9 @@ startScene.enter(async (ctx) => {
 
 		ctx.session.links = links;
 	} catch (error) {
-		console.warn(`can\'t get link from database by user_id: ${userId}`);
+		console.warn(
+			`[${getNowFormattedString()}] can\'t get link from database by user_id: ${userId}`,
+		);
 		console.error(error);
 	}
 
