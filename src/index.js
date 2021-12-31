@@ -41,7 +41,10 @@ const bot = new Telegraf(process.env.TG_TOKEN);
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.command('/start', (ctx) => ctx.scene.enter(GENERAL_SCENES.START));
+bot.command('/start', (ctx) => {
+	ctx.session.timeoutPerLink = Number(process.env.TIMEOUT_PER_LINK);
+	ctx.scene.enter(GENERAL_SCENES.START);
+});
 
 bot.on('message', (ctx) => {
 	const message = ctx.message.text;

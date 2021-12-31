@@ -10,22 +10,12 @@ let endMessage;
 
 const linkHandler = Telegraf.on('message', async (ctx) => {
 	const message = ctx.message.text;
-	// TODO: url parser + remove urlParam
-	const urlParam = 's=104';
 	const urlExp =
 		/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 	let link;
 
 	if (message.match(urlExp)) {
-		if (!message.includes(urlParam)) {
-			if (!message.includes('?')) {
-				link = message + '?' + urlParam;
-			} else {
-				link = message + '&' + urlParam;
-			}
-		} else {
-			link = message;
-		}
+		link = message;
 	} else {
 		await ctx.deleteMessage();
 
