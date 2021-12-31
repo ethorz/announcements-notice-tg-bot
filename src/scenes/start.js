@@ -10,7 +10,7 @@ import { getNowFormattedString } from '../helpers/date.js';
 const message = `
 🔸 <b>Бот готов к использованию.</b>
 🔸 Если не появились вспомогательные кнопки
- ▶ Введите /start`;
+▶ Введите /start`;
 
 const startScene = new Scenes.BaseScene(GENERAL_SCENES.START);
 

@@ -32,8 +32,8 @@ export const getAnnouncementsFromAvito = async (ctx, { url, name }) => {
 
 		if (data) {
 			const { id, message } = getParsedDataFromPage(data);
-			
-			if (!ctx.session.cache[name] || ctx.session.cache[name] !== id) {
+
+			if (ctx.session.cache?.[name] !== id) {
 				await ctx.replyWithHTML(`🔎 <b>${name}</b>\n${message}`);
 
 				ctx.session.cache[name] = id;
@@ -41,7 +41,9 @@ export const getAnnouncementsFromAvito = async (ctx, { url, name }) => {
 		}
 	} catch (error) {
 		console.warn(
-			`[${getNowFormattedString()}] Get announcement from avito failed (${name}: ${url})`,
+			`[${getNowFormattedString()}] Get announcement from avito failed.`,
+			name,
+			url,
 		);
 
 		console.error(error);
